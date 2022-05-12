@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>修改人员</title>
+</head>
+<body>
+
+<form th:action="@{/employee}" method="post">
+    <input type="hidden" name="_method" value="put">
+    <input type="hidden" name="id" th:value="${employee.id}">
+    姓名：<input type="text" name="name" th:value="${#request.getAttribute('employee').name}"><br>
+    性别：<input type="radio" name="gender" value="男" th:field="${employee.gender}">男
+    <input type="radio" name="gender" value="女" th:field="${employee.gender}">女<br>
+    地址：<input type="text" name="address" th:value="${#request.getAttribute('employee').address}"><br>
+    <input type="submit" value="修改"><br>
+</form>
+
+</body>
+</html>

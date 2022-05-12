@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>获取请求参数</title>
+</head>
+<body>
+<h1>获取请求参数</h1>
+
+
+<a th:href="@{/testServletAPI(name='宁',password=123123)}">测试使用ServletAPI获取请求参数</a><br>
+
+<a th:href="@{/testParam(name='宁',password=123123)}">测试使用控制器方法的形参</a><br>
+
+<form th:action="@{/testParam}" method="get">
+    用户名：<input type="text" name="name">
+    密码：<input type="password" name="password">
+    爱好：<input type="checkbox" name="hobby" value="a">a
+    <input type="checkbox" name="hobby" value="b">b
+    <input type="checkbox" name="hobby" value="c">c
+    <input type="submit" value="测试使用控制器方法的形参">
+</form>
+
+
+<form th:action="@{/testAnno}" method="post">
+    姓名:<input type="text" name="user_name">
+    密码:<input type="password" name="password">
+    兴趣:<input type="checkbox" name="hobby" value="q">q
+    <input type="checkbox" name="hobby" value="w">w
+    <input type="checkbox" name="hobby" value="e">e
+    <input type="submit" value="测试使用RequestParam注解的方式">
+</form>
+
+
+<form th:action="@{/testAnno2}" method="post">
+    姓名3:<input type="text" name="user_name">
+    密码3:<input type="password" name="password">
+    兴趣3:<input type="checkbox" name="hobby" value="q">q
+    <input type="checkbox" name="hobby" value="w">w
+    <input type="checkbox" name="hobby" value="e">e
+    <input type="submit" value="测试使用RequestHeader注解的方式">
+</form>
+
+<a th:href="@{/testAnno3(name='宁')}">测试Cookie注解获取请求参数</a>
+
+
+<form th:action="@{/testPOJO}" method="get">
+    用户名：<input type="text" name="username"><br>
+    密码：<input type="text" name="password"><br>
+    性别：<input type="radio" name="sex" value="男">男<input type="radio" name="sex" value="女">女<br>
+    年龄：<input type="text" name="age"><br>
+    <input type="submit" value="使用POJO接收请求参数">
+</form>
+
+
+
+
+</body>
+</html>

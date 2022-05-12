@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syning.mybatis.mappers.EmpMapper">
+
+
+    <resultMap id="empResultMap" type="Emp">
+<!--        id 设置主键的字段关系            -->
+        <id property="eid" column="eid"></id>
+<!--        result 设置其他字段的映射关系          -->
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+    </resultMap>
+
+<!--    1、List<Emp> getAllEmp();                      -->
+    <select id="getAllEmp" resultMap="empResultMap">
+        select * from t_emp
+    </select>
+    <select id="getAllEmpold" resultType="Emp">
+        select * from t_emp
+        <!--select eid, emp_name empName, age, sex from t_emp-->
+    </select>
+
+
+
+<!--        处理多对一映射关系 第一种方式 使用级联属性赋值            -->
+    <resultMap id="oneEmpAndDeptResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+<!--        级联属性赋值              -->
+        <result property="dept.did" column="did"></result>
+        <result property="dept.deptName" column="dept_name"></result>
+    </resultMap>
+    <!--        处理多对一映射关系 第二种方式 使用 association 标签            -->
+    <resultMap id="twoEmpAndDeptResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+<!--        利用 association 标签，创建一个 Dept 对象，然后交给 emp.dept      -->
+        <association property="dept" javaType="Dept">
+            <id property="did" column="did"></id>
+            <result property="deptName" column="dept_name"></result>
+        </association>
+    </resultMap>
+
+
+<!--    2、Emp getEmpAndDept(@Param("eid") Integer eid);             -->
+    <select id="getEmpAndDept" resultMap="twoEmpAndDeptResultMap">
+        select eid, emp_name, age, sex, t_dept.dept_name, t_dept.did
+            from t_emp, t_dept
+            where t_emp.did = t_dept.did and t_emp.eid = #{eid}
+    </select>
+
+
+
+
+
+
+<!--    3、Emp getEmpAndDeptByStepOne(@Param("eid") Integer eid);                   -->
+    <select id="getEmpAndDeptByStepOne" resultMap="threeEmpAndDeptResultMap">
+        select * from t_emp where eid = #{eid}
+    </select>
+
+    <resultMap id="threeEmpAndDeptResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+
+<!--           association 标签中的 column 写的是分步查询的条件 数据会传给第二条SQL语句，也就是 select 指向的 select 唯一标识
+               select : 设置分布查询的SQL的唯一标识(namespace.SQLId 或 Mapper接口的全类名.方法名)
+               column : 设置分布查询的条件
+-->
+        <association property="dept"
+                     select="com.syning.mybatis.mappers.DeptMapper.getEmpAndDeptByStepTwo"
+                     column="did"
+                     fetchType="lazy"></association>
+    </resultMap>
+
+
+
+
+
+
+
+
+<!--    5、List<Emp> getDeptAndEmpsByStepTwo(@Param("did") Integer did);               -->
+    <select id="getDeptAndEmpsByStepTwo" resultType="Emp">
+        select * from t_emp where did = #{did}
+    </select>
+
+
+
+
+
+</mapper>

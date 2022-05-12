@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>首页</h1>
+<!--    测试注解value    -->
+<a th:href="@{/hello/testRequestMapping}">测试RequestMapping注解的位置</a><br/>
+<a th:href="@{/hello/test}">测试RequestMapping注解的value属性 -> /hello/test</a><br/>
+<a th:href="@{/hello/like}">测试RequestMapping注解的value属性 -> /hello/like</a><br/>
+
+<!--    测试注解的请求方式-->
+<a th:href="@{/hello/test}">测试RequestMapping注解的method属性 -> GET</a><br/>
+<form th:action="@{/hello/test}" method="post">
+    <input type="submit" value="测试RequestMapping注解的method属性 -> POST"/>
+</form><br/>
+<a th:href="@{/hello/ning}">测试GetMapping注解value属性为/hello/ning -> GetMapping</a><br/>
+
+<!--    测试 put 请求方式-->
+<br/>
+<form th:action="@{/hello/testPut}" method="put">
+    <input type="submit" value="测试form表单是否能够发送put或delete请求方式"/>
+</form><br/>
+
+<!--    测试 params 请求参数    可以使用 ? 进行拼接-->
+<a th:href="@{/hello/yue?username='宁'}">测试RequestMapping注解的params属性 -> /hello/yue</a><br/>
+<!--       但是 thmeleaf 表达式的话，应该用 (username='ning',password=123456)-->
+<a th:href="@{/hello/yue(username='宁', password=123456)}">测试RequestMapping注解的params属性2 -> /hello/yue</a><br/>
+<!--    若是这个请求没有传参数，而它的请求映射有参数，则无法匹配    -->
+<a th:href="@{/hello/yue}">测试RequestMapping注解的params属性3 -> /hello/yue</a><br/>
+<!--    如果请求映射中接收 username 和 pwd 那么只传入 username 也不行，如果只有 username 那么传入多个参数也没问题-->
+<a th:href="@{/hello/yue(username='宁', name='红颜')}">测试RequestMapping注解的params属性4 -> /hello/yue</a><br/>
+
+<!--    请求头测试           -->
+<a th:href="@{/hello/xin}">测试RequestMapping注解的headers属性 -> /hello/xin</a><br/>
+
+
+<a th:href="@{/hello/aq/testAnt}">测试@RequestMapping可以匹配ant风格的路径 -> 使用?</a><br/>
+
+
+<a th:href="@{/hello/testPath/30}">测试@RequestMapping支持路径中的占位符 -> /hello/testPath</a><br/>
+
+
+</body>
+</html>

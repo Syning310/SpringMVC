@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syning.maven.mappers.MessageMapper">
+
+    <resultMap id="messageResultMapNoPerson" type="Message">
+        <id property="mid" column="mid"></id>
+        <result property="mTitle" column="m_title"></result>
+        <result property="mContent" column="m_content"></result>
+        <result property="mDate" column="m_date"></result>
+        <result property="mReply" column="m_reply"></result>
+        <result property="mStatus" column="m_status"></result>
+    </resultMap>
+
+<!--    // 根据 mid 查询所有的 Message 对象
+        List<Message> getAllMessageByMid(@Param("mid") Integer mid);            -->
+    <select id="getAllMessageByMid" resultMap="messageResultMapNoPerson">
+        select `mid`, m_title, m_content, m_date, m_reply, m_status, pid from t_message where mid = #{mid}
+    </select>
+
+
+
+    <sql id="fields">mid, m_title, m_content, m_date, m_reply, m_status, pid</sql>
+
+
+    <resultMap id="messageResultMap" type="Message">
+        <id property="mid" column="mid"></id>
+        <result property="mTitle" column="m_title"></result>
+        <result property="mContent" column="m_content"></result>
+        <result property="mDate" column="m_date"></result>
+        <result property="mReply" column="m_reply"></result>
+        <result property="mStatus" column="m_status"></result>
+        <association property="person"
+                     select="com.syning.maven.mappers.PersonMapper.getPersonByEid"
+                     column="pid"></association>
+    </resultMap>
+
+<!--    // 查询所有的 Message 对象
+        List<Message> getAllMessage();          -->
+    <select id="getAllMessage" resultMap="messageResultMap">
+        select <include refid="fields"></include> from t_message
+    </select>
+
+
+
+
+<!--    // 根据 mid 获取单条 Message 对象
+        Message getMessageByMid(@Param("mid") Integer mid);-->
+    <select id="getMessageByMid" resultMap="messageResultMap">
+        select <include refid="fields"></include> from t_message where mid = #{mid}
+    </select>
+
+
+
+<!--    // 给 Message 对象添加回复
+        int updateReply(@Param("reply") String reply, @Param("mid") Integer mid);-->
+    <update id="updateReply">
+        update t_message set m_reply = #{reply} where `mid` = #{mid}
+    </update>
+
+
+
+<!--    // 添加消息
+        int insertMessage(@Param("pid") Integer pid, @Param("mes") Message mes);-->
+    <insert id="insertMessage">
+        insert into t_message (m_title, m_content, m_date,  pid, m_status)
+            value (#{mes.mTitle}, #{mes.mContent}, now(), #{pid}, '未读')
+    </insert>
+
+
+
+<!--    // 设置已读
+        int setRead(@Param("mid") Integer mid);-->
+    <update id="setRead">
+        update t_message set m_status = '已读' where `mid` = #{mid}
+    </update>
+
+
+
+<!--    // 删除消息
+        int deleteMessage(@Param("mid") Integer mid);           -->
+    <delete id="deleteMessage">
+        delete from t_message where mid = #{mid}
+    </delete>
+
+
+
+
+</mapper>

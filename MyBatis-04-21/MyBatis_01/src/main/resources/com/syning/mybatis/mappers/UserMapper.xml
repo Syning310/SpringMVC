@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syning.mybatis.mappers.UserMapper">
+
+    <!--   List<User> getList()    -->
+    <select id="getList" resultType="User">
+        select * from t_user
+    </select>
+
+
+<!--    User getUserByName(String name)     -->
+    <select id="getUserByName" resultType="User">
+         <!--   select * from t_user where name = #{name}   -->
+        select * from t_user where name = '${name}'
+    </select>
+
+
+<!--    User checkLogin(String name, String pwd);           -->
+    <select id="checkLogin" resultType="User">
+        <!-- select * from t_user where name = #{param1} and pwd = #{param2}  -->
+
+        select * from t_user where name = '${param1}' and pwd = '${arg1}'
+    </select>
+
+
+
+
+<!--    User checkLoginByMap(Map<String, Object> map);          -->
+    <select id="checkLoginByMap" resultType="User">
+        select * from t_user where name=#{name} and pwd=#{pwd}
+
+        <!--    select * from t_user where name='${name}' and pwd='${pwd}'    -->
+    </select>
+
+
+
+<!--    User checkLoginByUser(User user);               -->
+    <select id="checkLoginByUser" resultType="User">
+        select * from t_user where name=#{name} and pwd=#{pwd}
+    </select>
+
+
+<!--    int addUser(User user);                 -->
+    <insert id="addUser">
+    <!--  insert into t_user values (null, #{name}, #{pwd}, #{age}, #{sex})    -->
+
+        insert into t_user values (null, '${name}', '${pwd}', ${age}, '${sex}')
+    </insert>
+
+
+
+<!--    User checkLoginByParam(@Param("name")String name, @Param("pwd")String pwd);                 -->
+    <select id="checkLoginByParam" resultType="User">
+        select * from t_user where name=#{name} and pwd=#{pwd}
+    </select>
+
+
+
+
+
+
+</mapper>

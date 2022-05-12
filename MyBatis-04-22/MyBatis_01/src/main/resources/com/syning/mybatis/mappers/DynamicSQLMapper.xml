@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.syning.mybatis.mappers.DynamicSQLMapper">
+
+    <resultMap id="EmpByConditionResultMap" type="Emp">
+        <id property="eid" column="eid"></id>
+        <result property="empName" column="emp_name"></result>
+        <result property="age" column="age"></result>
+        <result property="sex" column="sex"></result>
+    </resultMap>
+
+
+
+<!--    1、List<Emp> getEmpByCondition(@Param("emp") Emp emp);                -->
+    <select id="getEmpByConditionif" resultMap="EmpByConditionResultMap">
+        select * from t_emp where 1=1
+        <if test="empName != null and empName != ''">
+            emp_name = #{empName}
+        </if>
+        <if test="age != null and age != ''">
+            and age = #{age}
+        </if>
+        <if test="sex != null and sex != ''">
+            and sex = #{sex}
+        </if>
+    </select>
+
+
+    <!--    1、List<Emp> getEmpByCondition(@Param("emp") Emp emp);                -->
+    <select id="getEmpByConditionTwo" resultMap="EmpByConditionResultMap">
+        select * from t_emp
+        <where>
+            <if test="empName != null and empName != ''">
+                and emp_name = #{empName}
+            </if>
+            <if test="age != null and age != ''">
+                and age = #{age}
+            </if>
+            <if test="sex != null and sex != ''">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+
+    <sql id="empColumns">eid, emp_name, age, sex</sql>
+
+    <!--    1、List<Emp> getEmpByCondition(@Param("emp") Emp emp);                -->
+    <select id="getEmpByCondition" resultMap="EmpByConditionResultMap">
+        select <include refid="empColumns"></include> from t_emp
+        <trim prefix="where" suffixOverrides="and|or">
+            <if test="emp.empName != null and emp.empName != ''">
+                emp_name = #{emp.empName} or
+            </if>
+            <if test="emp.age != null and emp.age != ''">
+                age = #{emp.age} or
+            </if>
+            <if test="emp.sex != null and emp.sex != ''">
+                sex = #{emp.sex} or
+            </if>
+        </trim>
+    </select>
+
+
+
+
+
+
+
+<!--        2、List<Emp> getEmpByChoose(@Param("emp") Emp emp);            -->
+    <select id="getEmpByChoose" resultMap="EmpByConditionResultMap">
+        select * from t_emp
+        <where>
+            <choose>
+                <when test="emp.empName != null and emp.empName != ''">
+                    emp_name = #{emp.empName}
+                </when>
+                <when test="emp.age != null and emp.age != ''">
+                    emp_name = #{emp.age}
+                </when>
+                <when test="emp.sex != null and emp.sex != ''">
+                    emp_name = #{emp.sex}
+                </when>
+                <otherwise>
+                    did = 1
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+
+
+
+
+
+
+
+<!--    3、int deleteMoreByArrays(@Param("eids") Integer[] eids);             -->
+    <delete id="deleteMoreByArrays">
+        delete from t_emp where eid in
+
+        <foreach collection="eids" item="eid" separator="," open="(" close=")">
+            #{eid}
+        </foreach>
+
+
+    </delete>
+
+
+
+
+
+
+
+<!--    4、int insertMoreByList(List<Emp> emps);             -->
+    <insert id="insertMoreByList" useGeneratedKeys="true" keyProperty="eid">
+        insert into t_emp values
+        <foreach collection="emps" item="emp" separator=",">
+            (null, #{emp.empName}, #{emp.age}, #{emp.sex}, #{emp.dept.did})
+        </foreach>
+    </insert>
+
+
+
+
+
+</mapper>
